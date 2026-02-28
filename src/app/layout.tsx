@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import { GoeyToaster } from "@/components/ui/goey-toaster";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,6 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <GoeyToaster spring={false} />
       </body>
     </html>
   );
