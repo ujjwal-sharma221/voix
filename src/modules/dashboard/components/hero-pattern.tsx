@@ -1,20 +1,9 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
-import { BarVisualizer, type AgentState } from "@/components/ui/bar-visualizer";
 import { cn } from "@/lib/utils";
+import { BarVisualizer } from "@/components/ui/bar-visualizer";
 
 export function HeroPattern({ className }: { className?: string }) {
-  const pathname = usePathname();
-
-  const visualizerMap = new Map<string, AgentState>([
-    ["/", "initializing"],
-    ["/voices", "listening"],
-    ["/text-to-speech", "speaking"],
-    ["/voice-cloning", "thinking"],
-  ]);
-
   return (
     <div
       className={cn(
@@ -25,7 +14,7 @@ export function HeroPattern({ className }: { className?: string }) {
       <BarVisualizer
         className="rounded-t-none "
         demo={true}
-        state={visualizerMap.get(pathname) ?? "initializing"}
+        state="speaking"
         barCount={15}
       />
     </div>
