@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { GoeyToaster } from "@/components/ui/goey-toaster";
+import { ReactQueryProvider } from "@/providers/react-query-provider";
 
 import "./globals.css";
 
@@ -31,14 +32,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-          <GoeyToaster spring={false} />
-        </body>
-      </html>
+      <ReactQueryProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            {children}
+            <GoeyToaster spring={false} />
+          </body>
+        </html>
+      </ReactQueryProvider>
     </ClerkProvider>
   );
 }
