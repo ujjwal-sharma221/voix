@@ -3,9 +3,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { GoeyToaster } from "@/components/ui/goey-toaster";
-import { ReactQueryProvider } from "@/providers/react-query-provider";
 
 import "./globals.css";
+import { TRPCReactProvider } from "@/trpc/client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <ReactQueryProvider>
+      <TRPCReactProvider>
         <html lang="en">
           <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -41,7 +41,7 @@ export default function RootLayout({
             <GoeyToaster spring={false} />
           </body>
         </html>
-      </ReactQueryProvider>
+      </TRPCReactProvider>
     </ClerkProvider>
   );
 }

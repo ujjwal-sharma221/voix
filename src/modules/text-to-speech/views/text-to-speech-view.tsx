@@ -1,23 +1,54 @@
 "use client";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
+
+import { useTRPC } from "@/trpc/client";
 import {
   defaultTtsValues,
   TextToSpeechForm,
+  type TtsFormValues,
 } from "../components/text-to-speech-form";
+import { TtsProvider } from "../contexts/tts-voices-context";
 import { SettingsPanel } from "../components/settings-panel";
 import { TextInputPanel } from "../components/text-input-panel";
 import { VoicePreviewPlaceHolder } from "../components/voice-preview-placeholder";
 
-export function TextToSpeechView() {
+export function TextToSpeechView({
+  initialValues,
+}: {
+  initialValues?: Partial<TtsFormValues>;
+}) {
+  const trpc = useTRPC();
+
+  const { data: voices } = useSuspenseQuery(trpc.voices.getAll.queryOptions());
+  const { custom: customVoices, system: systemVoices } = voices;
+
+  const allVoices = [...customVoices, ...systemVoices];
+
+  const fallBackVoiceId = allVoices[0]?.id ?? "";
+  const resolvedVoiceId =
+    initialValues?.voiceId &&
+    allVoices.some((v) => v.id === initialValues.voiceId)
+      ? initialValues.voiceId
+      : fallBackVoiceId;
+
+  const defaultValues: TtsFormValues = {
+    ...defaultTtsValues,
+    ...initialValues,
+    voiceId: resolvedVoiceId,
+  };
+
   return (
-    <TextToSpeechForm defaultValues={defaultTtsValues}>
-      <div className="flex min-h-0 flex-1 overflow-hidden">
-        <div className="flex min-h-0 flex-1 flex-col">
-          <TextInputPanel />
-          <VoicePreviewPlaceHolder />
+    <TtsProvider value={{ customVoices, systemVoices, allVoices }}>
+      <TextToSpeechForm defaultValues={defaultValues}>
+        <div className="flex min-h-0 flex-1 overflow-hidden">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <TextInputPanel />
+            <VoicePreviewPlaceHolder />
+          </div>
+          <SettingsPanel />
         </div>
-        <SettingsPanel />
-      </div>
-    </TextToSpeechForm>
+      </TextToSpeechForm>
+    </TtsProvider>
   );
 }
